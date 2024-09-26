@@ -8,7 +8,7 @@
 	},
 	"type": "commonjs",
 	"bin": {
-		"react-component-generator": "./dist/index.js"
+		"react-cgen": "./dist/index.js"
 	},
 	"scripts": {
 		"build": "tsc --project tsconfig.build.json",
