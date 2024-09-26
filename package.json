@@ -31,13 +31,15 @@
 		"dotenv": "^16.4.5",
 		"ejs": "^3.1.10",
 		"figlet": "^1.7.0",
-		"fs-extra": "^11.2.0"
+		"fs-extra": "^11.2.0",
+		"ora": "^8.1.0"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^19.4.0",
 		"@commitlint/config-conventional": "^19.2.2",
 		"@eslint/js": "^9.9.0",
 		"@types/ejs": "^3.1.5",
+		"@types/figlet": "^1.5.8",
 		"@types/fs-extra": "^11.0.4",
 		"@types/jest": "^29.5.12",
 		"@types/node": "^22.3.0",
