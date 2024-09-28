@@ -12,6 +12,10 @@
 	},
 	"scripts": {
 		"build": "tsc --project tsconfig.build.json",
+		"build:full": "npm run build && npm run copy-template",
+		"copy-template": "npm run copy:unix || npm run copy:windows",
+		"copy:unix": "[ \"$(uname)\" = \"Linux\" ] || [ \"$(uname)\" = \"Darwin\" ] && cp -r src/templates dist",
+		"copy:windows": "if exist src\\templates\\ ( xcopy src\\templates dist\\templates /E /I )",
 		"clean": "tsc --build --clean",
 		"lint-staged": "lint-staged",
 		"lint": "eslint \"src/**/*.{ts,tsx}\"",
