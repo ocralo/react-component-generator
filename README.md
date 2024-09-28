@@ -19,11 +19,18 @@ react-cgen [options] <component-name>
 -   `-h, --help`: Display help for command
 -   `-v, --version`: Display version number
 -   `-name, --name`: Test for show name
+-
+
+## Commands
+
+### `react-cgen components <component-name>`
+
+Generate a new React component.
 
 #### Example
 
 ```bash
-react-cgen -name Ocralo
+react-cgen components Button
 ```
 
 ## Collaborators
@@ -32,4 +39,4 @@ react-cgen -name Ocralo
 
 ## License
 
-**[MIT](https://opensource.org/license/mit)**
+**[MIT](./LICENSE)**
