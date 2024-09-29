@@ -23,7 +23,8 @@
 		"lint:fix": "eslint --fix \"src/**/*.{ts,tsx}\"",
 		"format": "prettier --write \"src/**/*.{ts,tsx}\"",
 		"format:check": "prettier --check \"src/**/*.{ts,tsx}\"",
-		"test": "jest",
+		"test": "jest --config jest.config.ts --coverage",
+		"test:ci": "jest --config jest.config.ts --coverage --ci --clearCache --clearMocks",
 		"prepare": "node .husky/install.mjs"
 	},
 	"keywords": [
