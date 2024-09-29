@@ -25,6 +25,13 @@ jobs:
               run: npm run build:rollup
             - name: Copy package.json, README.md, LICENSE to dist
               run: |
+                  npm pkg delete scripts.prepare
                   cp package.json dist/package.json
                   cp README.md dist/README.md
                   cp LICENSE dist/LICENSE
+            - name: deploy to npm
+              run: |
+                  echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" > .npmrc
+                  npm publish ./dist --access public
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -13,8 +13,8 @@ on:
                 required: true
                 default: patch
 jobs:
-    build:
-        name: Build
+    generate-release:
+        name: Generate Release
         runs-on: ubuntu-latest
         steps:
             - name: Checkout repository
@@ -33,22 +33,6 @@ jobs:
                   cp package.json dist/package.json
                   cp README.md dist/README.md
                   cp LICENSE dist/LICENSE
-            - name: Generate Artifacts
-              uses: actions/upload-artifact@v4
-              with:
-                  name: dist_${{ github.run_id }}
-                  path: dist
-
-    generate-release:
-        name: Generate Release
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-            - name: Download Artifacts
-              uses: actions/download-artifact@v4
-              with:
-                  name: dist_${{ github.run_id }}
             - name: Resolve bump strategy
               id: bump-strategy
               env:
@@ -70,7 +54,7 @@ jobs:
               run: echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
             - name: Bump version and push tag
               id: tag_version
-              uses: mathieudutour/github-tag-action@v6.1
+              uses: mathieudutour/github-tag-action@v6.2
               with:
                   default_bump: ${{ steps.bump_strategy.outputs.strategy }}
                   github_token: ${{ secrets.GITHUB_TOKEN }}
