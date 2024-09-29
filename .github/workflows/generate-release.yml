@@ -1,9 +1,6 @@
-name: Deploy CI
+name: Generate Release
 run-name: ${{ github.run_id }} in ${{ github.workflow }} deploying
 on:
-    push:
-        branches:
-            - main
     workflow_dispatch:
         inputs:
             BUMP_STRATEGY:
@@ -14,11 +11,34 @@ on:
                     - minor
                     - patch
                 required: true
-            FLOW_ID:
-                type: string
-                description: 'Flow ID'
-                required: true
+                default: patch
 jobs:
+    build:
+        name: Build
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20.x'
+                  registry-url: https://registry.npmjs.org
+            - name: Install dependencies
+              run: npm ci
+            - name: Run Build
+              run: npm run build:rollup
+            - name: Copy package.json, README.md, LICENSE to dist
+              run: |
+                  cp package.json dist/package.json
+                  cp README.md dist/README.md
+                  cp LICENSE dist/LICENSE
+            - name: Generate Artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  name: dist_${{ github.run_id }}
+                  path: dist
+
     generate-release:
         name: Generate Release
         runs-on: ubuntu-latest
@@ -28,8 +48,7 @@ jobs:
             - name: Download Artifacts
               uses: actions/download-artifact@v4
               with:
-                  name: dist_${{ github.event.inputs.FLOW_ID }}
-                  run-id: ${{ github.event.inputs.FLOW_ID }}
+                  name: dist_${{ github.run_id }}
             - name: Resolve bump strategy
               id: bump-strategy
               env:
