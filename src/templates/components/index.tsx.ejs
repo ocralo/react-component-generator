@@ -1,0 +1,13 @@
+import React from 'react';
+import './style.scss';
+import { <%= name.toUpperCase() %>Props } from './interface.ts';
+
+const <%= name.toUpperCase() %>: React.FC<<%= name.toUpperCase() %>Props> = () => {
+  return (
+    <div className="<%= name.toLowerCase() %>">
+      <h1><%= name %> Component</h1>
+    </div>
+  );
+};
+
+export default <%= name.toUpperCase() %>;
