@@ -42,6 +42,7 @@ jobs:
     generate-release:
         name: Generate Release
         runs-on: ubuntu-latest
+        needs: build
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
