@@ -8,5 +8,10 @@ module.exports = {
 		'ts-jest': {
 			isolatedModules: true
 		}
-	}
+	},
+	moduleNameMapper: {
+		'@/(.*)': '<rootDir>/src/$1',
+		'@utils/(.*)': '<rootDir>/src/utils/$1'
+	},
+	collectCoverageFrom: ['<rootDir>/src/**/*.ts']
 }
