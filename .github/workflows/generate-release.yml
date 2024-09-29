@@ -28,7 +28,8 @@ jobs:
             - name: Download Artifacts
               uses: actions/download-artifact@v4
               with:
-                  name: dist ${{ github.event.inputs.FLOW_ID }}
+                  name: dist_${{ github.event.inputs.FLOW_ID }}
+                  run-id: ${{ github.event.inputs.FLOW_ID }}
             - name: Resolve bump strategy
               id: bump-strategy
               env:
