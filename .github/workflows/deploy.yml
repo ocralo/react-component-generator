@@ -31,5 +31,5 @@ jobs:
             - name: Generate Artifacts
               uses: actions/upload-artifact@v4
               with:
-                  name: dist ${{ github.run_id }}
+                  name: dist_${{ github.run_id }}
                   path: dist
