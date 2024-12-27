@@ -12,6 +12,11 @@ on:
                     - patch
                 required: true
                 default: patch
+            BRANCH:
+                type: string
+                description: 'Branch to release'
+                required: true
+                default: main
 jobs:
     generate-release:
         name: Generate Release
@@ -19,10 +24,13 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  fetch-tags: true
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
-                  node-version: '20.x'
+                  node-version-file: .nvmrc
                   registry-url: https://registry.npmjs.org
             - name: Install dependencies
               run: npm ci
@@ -34,7 +42,7 @@ jobs:
                   cp README.md dist/README.md
                   cp LICENSE dist/LICENSE
             - name: Resolve bump strategy
-              id: bump-strategy
+              id: bump_strategy
               env:
                   BUMP_STRATEGY: ${{ github.event.inputs.BUMP_STRATEGY }}
               run: |
@@ -49,6 +57,8 @@ jobs:
                   else
                       echo "strategy=major" >> $GITHUB_OUTPUT
                   fi
+            - name: List tags
+              run: git tag -l
             - name: Get latest tag
               id: get_latest_tag
               run: echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
@@ -58,7 +68,7 @@ jobs:
               with:
                   default_bump: ${{ steps.bump_strategy.outputs.strategy }}
                   github_token: ${{ secrets.GITHUB_TOKEN }}
-                  release_branches: main
+                  release_branches: ${{ github.event.inputs.BRANCH }}
             - name: Build Changelog
               id: build_changelog
               uses: mikepenz/release-changelog-builder-action@v5
@@ -84,7 +94,7 @@ jobs:
                               {
                               "title": "## 📃 Documentation",
                               "labels": ["documentation"]
-                              }
+                              },
                               {
                               "title": "## 💬 Other",
                               "labels": ["other"]
