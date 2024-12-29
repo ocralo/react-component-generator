@@ -115,12 +115,18 @@ jobs:
                   tag_name: ${{ steps.tag_version.outputs.new_tag }}
                   name: Release ${{ steps.tag_version.outputs.new_tag }}
                   body: ${{ steps.build_changelog.outputs.changelog }}
+            - name: Set up Git user
+              run: |
+                  git config --global user.name "${{ github.actor }}"
+                  git config --global user.email "${{ github.actor }}@users.noreply.github.com"
             - name: update package.json version
               run: |
-                  npm version ${{ steps.bump_strategy.outputs.strategy }}
+                  npm version ${{ steps.bump_strategy.outputs.new_tag }}
             - name: deploy to npm
               run: |
+                  ls
                   echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" > .npmrc
                   npm publish ./dist --access public
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+                  CI: 'true'
