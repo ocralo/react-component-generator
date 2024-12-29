@@ -78,10 +78,12 @@ jobs:
                   configurationJson: |
                       {
                         "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
+                        "pr_template": "- #{{TITLE}}\n   - PR: ##{{NUMBER}}",
+                        "empty_template": "- no changes",
                           "categories": [
                               {
                               "title": "## 🚀 Features",
-                              "labels": ["features", "Features", "feature", "Feature", "feat", "Feat"]
+                              "labels": ["features", "Features", "feature", "Feature", "feat", "Feat", "enhancement", "Enhancement"]
                               },
                               {
                               "title": "## 🐞 BugFixes",
@@ -96,6 +98,10 @@ jobs:
                               "labels": ["documentation", "docs", "Documentation", "Docs"]
                               },
                               {
+                              "title": "## 🧪 CI/CD",
+                              "labels": ["ci/cd", "CI/CD"]
+                              },
+                              {
                               "title": "## 💬 Other",
                               "labels": ["other"]
                               }
@@ -104,8 +110,8 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             - name: Create Release
-              uses: ncipollo/release-action@v1
+              uses: softprops/action-gh-release@v2
               with:
-                  tag: ${{ steps.tag_version.outputs.new_tag }}
+                  tag_name: ${{ steps.tag_version.outputs.new_tag }}
                   name: Release ${{ steps.tag_version.outputs.new_tag }}
                   body: ${{ steps.build_changelog.outputs.changelog }}
