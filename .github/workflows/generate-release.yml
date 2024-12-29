@@ -77,15 +77,15 @@ jobs:
                   toTag: ${{ steps.tag_version.outputs.new_tag }}
                   configurationJson: |
                       {
-                       "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
+                        "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
                           "categories": [
                               {
                               "title": "## 🚀 Features",
-                              "labels": ["enhancement"]
+                              "labels": ["features", "Features", "feature", "Feature", "feat", "Feat"]
                               },
                               {
                               "title": "## 🐞 BugFixes",
-                              "labels": ["bugfix"]
+                              "labels": ["bugfix", "Bugfix", "bug", "Bug", "fix", "Fix"]
                               },
                               {
                               "title": "## 🔨 Refactors",
@@ -93,12 +93,12 @@ jobs:
                               },
                               {
                               "title": "## 📃 Documentation",
-                              "labels": ["documentation"]
+                              "labels": ["documentation", "docs", "Documentation", "Docs"]
                               },
                               {
                               "title": "## 💬 Other",
                               "labels": ["other"]
-                              },
+                              }
                           ]
                       }
               env:
