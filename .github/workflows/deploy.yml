@@ -1,9 +1,7 @@
 name: Deploy CI
 run-name: ${{ github.run_id }} in ${{ github.workflow }} deploying
-on:
-    push:
-        branches:
-            - main
+on: workflow_dispatch
+
 jobs:
     deploy:
         runs-on: ubuntu-latest

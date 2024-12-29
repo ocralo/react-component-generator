@@ -77,15 +77,17 @@ jobs:
                   toTag: ${{ steps.tag_version.outputs.new_tag }}
                   configurationJson: |
                       {
-                       "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
+                        "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
+                        "pr_template": "- #{{TITLE}}\n   - PR: ##{{NUMBER}}",
+                        "empty_template": "- no changes",
                           "categories": [
                               {
                               "title": "## 🚀 Features",
-                              "labels": ["enhancement"]
+                              "labels": ["features", "Features", "feature", "Feature", "feat", "Feat", "enhancement", "Enhancement"]
                               },
                               {
                               "title": "## 🐞 BugFixes",
-                              "labels": ["bugfix"]
+                              "labels": ["bugfix", "Bugfix", "bug", "Bug", "fix", "Fix"]
                               },
                               {
                               "title": "## 🔨 Refactors",
@@ -93,19 +95,43 @@ jobs:
                               },
                               {
                               "title": "## 📃 Documentation",
-                              "labels": ["documentation"]
+                              "labels": ["documentation", "docs", "Documentation", "Docs"]
+                              },
+                              {
+                              "title": "## 🧪 CI/CD",
+                              "labels": ["ci/cd", "CI/CD"]
                               },
                               {
                               "title": "## 💬 Other",
                               "labels": ["other"]
-                              },
+                              }
                           ]
                       }
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             - name: Create Release
-              uses: ncipollo/release-action@v1
+              uses: softprops/action-gh-release@v2
               with:
-                  tag: ${{ steps.tag_version.outputs.new_tag }}
+                  tag_name: ${{ steps.tag_version.outputs.new_tag }}
                   name: Release ${{ steps.tag_version.outputs.new_tag }}
                   body: ${{ steps.build_changelog.outputs.changelog }}
+            - name: Set up Git user
+              run: |
+                  git config --global user.name "${{ github.actor }}"
+                  git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+            - name: add registry.npmjs.org to .npmrc
+              run: |
+                  echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" > .npmrc
+                  echo "commit-hooks=false" > .npmrc
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+            - name: update package.json version
+              run: |
+                  npm version --no-commit-hooks ${{ steps.bump_strategy.outputs.strategy }}
+            - name: deploy to npm
+              run: |
+                  npm publish ./dist --access public
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+                  NODE_ENV: production
+                  CI: 'true'
