@@ -119,14 +119,19 @@ jobs:
               run: |
                   git config --global user.name "${{ github.actor }}"
                   git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+            - name: add registry.npmjs.org to .npmrc
+              run: |
+                  echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" > .npmrc
+                  echo "commit-hooks=false" > .npmrc
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
             - name: update package.json version
               run: |
-                  npm version ${{ steps.bump_strategy.outputs.new_tag }}
+                  npm version ${{ steps.tag_version.outputs.new_tag }}
             - name: deploy to npm
               run: |
-                  ls
-                  echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" > .npmrc
                   npm publish ./dist --access public
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+                  NODE_ENV: production
                   CI: 'true'
